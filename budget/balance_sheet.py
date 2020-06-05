@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
 
+from matplotlib import pyplot as plt
+
 from budget.item import Item
 from budget.scenario import Scenario
 
@@ -9,10 +11,13 @@ def iter_dates(start, end):
 
 class BalanceSheet:
 
+
     def __init__(self, initial_value=0.0):
         self.initial_value = initial_value
         self.items = []
         self.scenarios = {}
+        plt.axhline(0, color='0.5', ls='--')
+
 
     def add_item(self, *args, **kwargs):
         self.items.append(Item(*args, **kwargs))
@@ -34,14 +39,30 @@ class BalanceSheet:
 
         today = datetime.today()
 
-        if not start:
-            start = today - timedelta(days=31)
+        if not start or isinstance(start, int):
+            n_months = -1
+            if isinstance(start, int):
+                assert start < 0
+                n_months = start
+            start = today + timedelta(days=n_months*31)
 
-        if not end:
-            end = today + timedelta(days=6*31)
+        if not end or isinstance(end, int):
+            n_months = 6
+            if isinstance(end, int):
+                assert end > 0
+                n_months = end
+            end = today + timedelta(days=n_months*31)
 
-        balance = self.initial_value
-        for date in iter_dates(start, end):
+        xtick_labels = list()
+        xtick_locs = list()
+        days = list()
+        balance = list()
+        for i, date in enumerate(iter_dates(start, end)):
+            days.append(i)
+            if date.day == 1 and date.month % month_every == 0:
+                xtick_labels.append(date.strftime('%B'))
+                xtick_locs.append(i)
+
             delta = 0.0
             for item in self.items:
                 delta += item.check(date)
@@ -54,3 +75,9 @@ class BalanceSheet:
                 balance.append(balance[-1] + delta)
             else:
                 balance.append(self.initial_value + delta)
+        days.insert(0, 0)
+        balance.insert(0, 0)
+        days.insert(1, float('nan'))
+        balance.insert(1, float('nan'))
+        plt.plot(days, balance)
+        plt.xticks(xtick_locs, xtick_labels, rotation=45)
