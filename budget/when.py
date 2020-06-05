@@ -25,10 +25,16 @@ class When:
         if self.once_on:
             return date == self.once_on
 
+        in_range = True
+        if self.ends and self.starts:
+            in_range = self.starts <= date <= self.ends
+        elif self.ends and not self.starts:
+            in_range = date <= self.ends
+        elif not self.ends and self.starts:
+            in_range = self.starts <= date
+
         if self.monthly_on:
-            return date.day == self.monthly_on # TODO: what if monthly_on is 31st and month is 30 days long? or what about Feb?
+            return date.day == self.monthly_on and in_range # TODO: what if monthly_on is 31st and month is 30 days long? or what about Feb?
 
-        if self.ends:
-            return self.starts <= date <= self.ends
 
-        return self.starts <= date
+        return in_range
