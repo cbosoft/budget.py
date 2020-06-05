@@ -1,29 +1,33 @@
 from datetime import datetime
 
+def check_convert_date(d):
+
+    if d is None:
+        return None
+
+    if isinstance(d, datetime):
+        return d
+    elif isinstance(d, str):
+        return datetime.strptime(d, '%d %B %Y')
+    else:
+        raise Exception('date is in incorrect format (must be datetime or string of format "%d %B %Y".')
+
 class When:
 
-    def __init__(self, once_on=None, starts=None, ends=None, monthly_on=None):
+    def __init__(self, once_on=None, starts=None, ends=None, monthly_on=0):
 
         assert once_on or starts or monthly_on
 
-        if once_on:
-            assert isinstance(once_on, datetime)
-        if starts:
-            assert isinstance(starts, datetime)
-        if ends:
-            assert isinstance(ends, datetime)
-        if monthly_on:
-            assert isinstance(monthly_on, int)
-
-        self.once_on = once_on
-        self.starts = starts
-        self.ends = ends
+        self.once_on = check_convert_date(once_on)
+        self.starts = check_convert_date(starts)
+        self.ends = check_convert_date(ends)
+        assert isinstance(monthly_on, int)
         self.monthly_on = monthly_on
 
     def matches(self, date):
         
         if self.once_on:
-            return date == self.once_on
+            return date.month == self.once_on.month and date.day == self.once_on.day and date.year == self.once_on.year
 
         in_range = True
         if self.ends and self.starts:
