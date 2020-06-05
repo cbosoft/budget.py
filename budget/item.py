@@ -2,7 +2,7 @@ from budget.when import When
 
 class Item:
 
-    def __init__(self, amount, when):
+    def __init__(self, amount, when, name=None):
         assert isinstance(amount, (float, int))
         self.amount = amount
 
