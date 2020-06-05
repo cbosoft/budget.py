@@ -80,4 +80,4 @@ class BalanceSheet:
         days.insert(1, float('nan'))
         balance.insert(1, float('nan'))
         plt.plot(days, balance)
-        plt.xticks(xtick_locs, xtick_labels, rotation=45)
+        plt.xticks(xtick_locs, xtick_labels, rotation=90)
