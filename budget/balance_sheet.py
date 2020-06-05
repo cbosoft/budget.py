@@ -79,5 +79,5 @@ class BalanceSheet:
         balance.insert(0, 0)
         days.insert(1, float('nan'))
         balance.insert(1, float('nan'))
-        plt.plot(days, balance)
+        plt.plot(days, balance, label='default' if not with_scenario else with_scenario)
         plt.xticks(xtick_locs, xtick_labels, rotation=90)
