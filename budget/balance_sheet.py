@@ -35,7 +35,7 @@ class BalanceSheet:
             self.plot(*args, with_scenario=scenario, **kwargs)
 
 
-    def plot(self, start=None, end=None, with_scenario=False, month_every=3):
+    def plot(self, start=None, end=None, with_scenario=False, month_every=1):
 
         today = datetime.today()
 
