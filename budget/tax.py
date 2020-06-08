@@ -26,7 +26,7 @@ _scottish_tax_bands = TaxBands(
 
 def after_tax(income, band='scotland'):
 
-    assert isinstance(band, (band, TaxBands))
+    assert isinstance(band, (str, TaxBands))
 
     band_obj = band
     if isinstance(band, str):
