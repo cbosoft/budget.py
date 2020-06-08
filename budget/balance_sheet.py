@@ -108,6 +108,12 @@ class BalanceSheet:
             else:
                 balance.append(self.initial_value + delta)
 
+        if isinstance(with_scenario, list):
+            if len(with_scenario) == 1:
+                with_scenario = with_scenario[0]
+            else:
+                with_scenario = ', '.join(with_scenario[:-1]) + ' and ' + with_scenario[-1]
+
         # Add a point at zero so that bottom ylim is at minimum zero
         days.insert(0, 0)
         balance.insert(0, 0)
