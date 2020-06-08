@@ -35,6 +35,31 @@ class BalanceSheet:
             self.plot(*args, with_scenario=scenario, **kwargs)
 
 
+
+
+    def get_delta_items(self, date):
+        delta = 0.0
+        for item in self.items:
+            delta += item.check(date)
+        return delta
+
+
+    def get_delta_scenario(self, date, scenario):
+        assert isinstance(scenario, (str, list))
+
+        if isinstance(scenario, list):
+            return sum([self.get_delta_scenario(date, s) for s in scenario])
+
+        assert scenario in self.scenarios
+
+        delta = 0.0
+        for item in self.scenarios[scenario].items:
+            delta += item.check(date)
+
+        return delta
+
+
+
     def plot(self, start=None, end=None, with_scenario=False, month_every=1):
 
         today = datetime.today()
@@ -63,18 +88,17 @@ class BalanceSheet:
                 xtick_labels.append(date.strftime('%B'))
                 xtick_locs.append(i)
 
-            delta = 0.0
-            for item in self.items:
-                delta += item.check(date)
+            delta = self.get_delta_items(date)
 
             if with_scenario:
-                for item in self.scenarios[with_scenario].items:
-                    delta += item.check(date)
+                delta += self.get_delta_scenario(date, with_scenario)
 
             if balance:
                 balance.append(balance[-1] + delta)
             else:
                 balance.append(self.initial_value + delta)
+
+        # Add a point at zero so that bottom ylim is at minimum zero
         days.insert(0, 0)
         balance.insert(0, 0)
         days.insert(1, float('nan'))
