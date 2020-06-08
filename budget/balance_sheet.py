@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from matplotlib import pyplot as plt
 
 from budget.item import Item
-from budget.scenario import Scenario
+from budget.scenario import Scenario, all_possible_combinations_of
 
 def iter_dates(start, end):
     for i in range( (end-start).days ):
@@ -35,6 +35,12 @@ class BalanceSheet:
             self.plot(*args, with_scenario=scenario, **kwargs)
 
 
+    def plot_combine_scenarios(self, *args, **kwargs):
+        self.plot(*args, **kwargs)
+        # combine all scenarios
+        scenario_list = list(self.scenarios.keys())
+        for scenario_combo in all_possible_combinations_of(scenario_list):
+            self.plot(*args, with_scenario=scenario_combo, **kwargs)
 
 
     def get_delta_items(self, date):
