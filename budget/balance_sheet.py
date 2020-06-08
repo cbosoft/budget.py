@@ -88,7 +88,11 @@ class BalanceSheet:
         xtick_locs = list()
         days = list()
         balance = list()
+        pyear = start.year
         for i, date in enumerate(iter_dates(start, end)):
+            if date.year != pyear:
+                plt.axvline(i, color='0.5', lw=1)
+                pyear = date.year
             days.append(i)
             if date.day == 1 and date.month % month_every == 0:
                 xtick_labels.append(date.strftime('%B'))
