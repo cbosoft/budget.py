@@ -4,19 +4,26 @@ from matplotlib import pyplot as plt
 
 from budget.item import Item
 from budget.scenario import Scenario, all_possible_combinations_of
+from budget.diagram import Diagram
 
 def iter_dates(start, end):
     for i in range( (end-start).days ):
         yield start + timedelta(days=i)
 
-class BalanceSheet:
 
+class BalanceSheet(Diagram):
 
     def __init__(self, initial_value=0.0):
         self.initial_value = initial_value
         self.items = []
         self.scenarios = {}
         plt.axhline(0, color='0.5', ls='--')
+        self.params = dict(
+                scenarios=False,
+                combine_scenarios=False,
+                ends=None,
+                starts=None,
+                month_every=1)
 
 
     def add_item(self, *args, **kwargs):
