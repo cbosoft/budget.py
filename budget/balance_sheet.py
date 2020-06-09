@@ -58,10 +58,6 @@ class BalanceSheet(Diagram):
         return delta
 
 
-    def set_params(self, **kwargs):
-        self.params = {**self.params, **kwargs}
-
-
     def plot(self):
         if self.params['scenarios']:
             if self.params['combine_scenarios']:
@@ -89,24 +85,9 @@ class BalanceSheet(Diagram):
             self._plot(*args, with_scenario=scenario_combo, **kwargs)
 
 
+    def _plot(self, with_scenario=False, month_every=1, **kwargs):
 
-    def _plot(self, start=None, end=None, with_scenario=False, month_every=1, **kwargs):
-
-        today = datetime.today()
-
-        if not start or isinstance(start, int):
-            n_months = -1
-            if isinstance(start, int):
-                assert start < 0
-                n_months = start
-            start = today + timedelta(days=n_months*31)
-
-        if not end or isinstance(end, int):
-            n_months = 6
-            if isinstance(end, int):
-                assert end > 0
-                n_months = end
-            end = today + timedelta(days=n_months*31)
+        start, end = self.get_time_extents(**kwargs)
 
         xtick_labels = list()
         xtick_locs = list()
