@@ -5,10 +5,7 @@ from matplotlib import pyplot as plt
 from budget.item import Item
 from budget.scenario import Scenario, all_possible_combinations_of
 from budget.diagram import Diagram
-
-def iter_dates(start, end):
-    for i in range( (end-start).days ):
-        yield start + timedelta(days=i)
+from budget.util import iter_dates
 
 
 class BalanceSheet(Diagram):
