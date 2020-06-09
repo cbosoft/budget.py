@@ -29,20 +29,6 @@ class BalanceSheet:
         self.scenarios[scenario].items.append(Item(*args, **kwargs))
 
 
-    def plot_scenarios(self, *args, **kwargs):
-        self.plot(*args, **kwargs)
-        for scenario in self.scenarios.keys():
-            self.plot(*args, with_scenario=scenario, **kwargs)
-
-
-    def plot_combine_scenarios(self, *args, **kwargs):
-        self.plot(*args, **kwargs)
-        # combine all scenarios
-        scenario_list = list(self.scenarios.keys())
-        for scenario_combo in all_possible_combinations_of(scenario_list):
-            self.plot(*args, with_scenario=scenario_combo, **kwargs)
-
-
     def get_delta_items(self, date):
         delta = 0.0
         for item in self.items:
@@ -65,8 +51,39 @@ class BalanceSheet:
         return delta
 
 
+    def set_params(self, **kwargs):
+        self.params = {**self.params, **kwargs}
 
-    def plot(self, start=None, end=None, with_scenario=False, month_every=1):
+
+    def plot(self):
+        if self.params['scenarios']:
+            if self.params['combine_scenarios']:
+                self._plot_combine_scenarios(**self.params)
+            else:
+                self._plot_scenarios(**self.params)
+        else:
+            self._plot(**self.params)
+        plt.plot([0], [0])
+        plt.legend(loc='center left', bbox_to_anchor=(1.01, 0.5))
+        plt.axhline(0.0, color='red')
+
+
+    def _plot_scenarios(self, *args, **kwargs):
+        self._plot(*args, **kwargs)
+        for scenario in self.scenarios.keys():
+            self._plot(*args, with_scenario=scenario, **kwargs)
+
+
+    def _plot_combine_scenarios(self, *args, **kwargs):
+        self._plot(*args, **kwargs)
+        # combine all scenarios
+        scenario_list = list(self.scenarios.keys())
+        for scenario_combo in all_possible_combinations_of(scenario_list):
+            self._plot(*args, with_scenario=scenario_combo, **kwargs)
+
+
+
+    def _plot(self, start=None, end=None, with_scenario=False, month_every=1, **kwargs):
 
         today = datetime.today()
 
