@@ -1,6 +1,6 @@
-from datetime import datetime
+from datetime import date
 
-from ..when import When
+from ..when.when import When
 from ..scenario import Scenario
 
 
@@ -12,8 +12,8 @@ class Item:
         self.name = name
         self.annotate = annotate
 
-    def check(self, date: datetime) -> bool:
-        return self.when.matches(date)
+    def check(self, d: date) -> bool:
+        return self.when.matches(d)
 
     def do(self, scenario: Scenario):
         raise NotImplementedError

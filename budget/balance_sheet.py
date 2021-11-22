@@ -1,5 +1,5 @@
 from typing import Dict
-from datetime import datetime, timedelta
+from datetime import date, timedelta
 import re
 
 from matplotlib import pyplot as plt
@@ -16,8 +16,8 @@ class BalanceSheet:
         self.name = name
         self.accounts = list(accounts)
         self.scenarios: Dict[str, Scenario] = {}
-        self.start = datetime.today()
-        self.end = datetime.today()+timedelta(weeks=6*4)
+        self.start = date.today()
+        self.end = date.today()+timedelta(days=365//2)
 
     def __enter__(self):
         return self
