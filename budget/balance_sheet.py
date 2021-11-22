@@ -13,7 +13,7 @@ from .account import Account
 
 class BalanceSheet:
 
-    def __init__(self, name, *accounts: Account, single=False, currency='£'):
+    def __init__(self, *accounts: Account, name: str = None, single=False, currency='£'):
         self.name = name
         self.single = single
         self.accounts = list(accounts)

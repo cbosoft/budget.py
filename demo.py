@@ -1,6 +1,6 @@
 from budget import *
 
-with BalanceSheet('demo.pdf', single=True) as bs:
+with BalanceSheet(single=True) as bs:
 
     current = bs.add_account('Current', 300)
     savings = bs.add_account('Savings', 500)
