@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import re
 
 from matplotlib import pyplot as plt
 
@@ -11,6 +12,7 @@ from budget.util import iter_dates
 class BalanceSheet(Diagram):
 
     def __init__(self, initial_value=0.0):
+        super().__init__()
         self.initial_value = initial_value
         self.items = []
         self.scenarios = {}
@@ -22,23 +24,30 @@ class BalanceSheet(Diagram):
                 starts=None,
                 month_every=1)
 
+    def add_item(self, scenario=None, **kwargs):
+        if scenario is not None:
+            self.add_item_to_scenario(scenario, **kwargs)
+        else:
+            self.items.append(Item(**kwargs))
 
-    def add_item(self, *args, **kwargs):
-        self.items.append(Item(*args, **kwargs))
-
-
-    def add_item_to_scenario(self, scenario, *args, **kwargs):
+    def add_item_to_scenario(self, scenario, **kwargs):
         if scenario not in self.scenarios:
             self.scenarios[scenario] = Scenario()
-        self.scenarios[scenario].items.append(Item(*args, **kwargs))
+            self.params['scenarios'] = True
+        self.scenarios[scenario].items.append(Item(**kwargs))
 
+    def add_item_to_matching_scenarios(self, pattern, *args, **kwargs):
+        item = Item(*args, **kwargs)
+        pattern_re = re.compile(pattern)
+        for name, scenario in self.scenarios.items():
+            if pattern_re.match(name):
+                scenario.items.append(item)
 
     def get_delta_items(self, date):
         delta = 0.0
         for item in self.items:
             delta += item.check(date)
         return delta
-
 
     def get_delta_scenario(self, date, scenario):
         assert isinstance(scenario, (str, list))
