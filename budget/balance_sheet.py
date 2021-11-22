@@ -63,7 +63,6 @@ class BalanceSheet(Diagram):
 
         return delta
 
-
     def plot(self):
         if self.params['scenarios']:
             if self.params['combine_scenarios']:
@@ -71,29 +70,24 @@ class BalanceSheet(Diagram):
             else:
                 self._plot_scenarios(**self.params)
         else:
-            self._plot(**self.params)
-        plt.plot([0], [0])
-        plt.legend(loc='center left', bbox_to_anchor=(1.01, 0.5))
-        plt.axhline(0.0, color='red')
-
+            self._plot(0, **self.params)
 
     def _plot_scenarios(self, *args, **kwargs):
-        self._plot(*args, **kwargs)
-        for scenario in self.scenarios.keys():
-            self._plot(*args, with_scenario=scenario, **kwargs)
-
+        self._plot(0, *args, **kwargs)
+        for n, scenario in enumerate(self.scenarios.keys()):
+            self._plot(n+1, *args, with_scenario=scenario, **kwargs)
 
     def _plot_combine_scenarios(self, *args, **kwargs):
-        self._plot(*args, **kwargs)
+        self._plot(0, *args, **kwargs)
         # combine all scenarios
         scenario_list = list(self.scenarios.keys())
-        for scenario_combo in all_possible_combinations_of(scenario_list):
-            self._plot(*args, with_scenario=scenario_combo, **kwargs)
+        for n, scenario_combo in enumerate(all_possible_combinations_of(scenario_list)):
+            self._plot(n, *args, with_scenario=scenario_combo, **kwargs)
 
-
-    def _plot(self, with_scenario=False, month_every=1, **kwargs):
+    def _plot(self, n, with_scenario=False, month_every=1, **kwargs):
 
         start, end = self.get_time_extents(**kwargs)
+        colour = f'C{n}'
 
         xtick_labels = list()
         xtick_locs = list()
@@ -119,6 +113,11 @@ class BalanceSheet(Diagram):
             else:
                 balance.append(self.initial_value + delta)
 
+            maybe_annotate_items = self.items if not with_scenario else self.scenarios[with_scenario].items
+            for item in maybe_annotate_items:
+                if item.annotate and item.when.matches(date):
+                    pass  # plt.text(i, balance[-1]+500, item.name, rotation=90, ha='center', color=colour)
+
         if isinstance(with_scenario, list):
             if len(with_scenario) == 1:
                 with_scenario = with_scenario[0]
@@ -130,5 +129,21 @@ class BalanceSheet(Diagram):
         balance.insert(0, 0)
         days.insert(1, float('nan'))
         balance.insert(1, float('nan'))
+        if not with_scenario:
+            mc = self.monthly_change()
+            s = '+' if mc >= 0 else '-'
+            mc = abs(mc)
+            plt.title(f'Default monthly change {s}£{mc:.2f}')
         plt.plot(days, balance, label='default' if not with_scenario else with_scenario)
         plt.xticks(xtick_locs, xtick_labels, rotation=90)
+
+    def monthly_change(self):
+        monthly_change = 0.0
+        for item in self.items:
+            monthly_change += item.as_monthly_change()
+        return monthly_change
+
+
+
+
+

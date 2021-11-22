@@ -33,7 +33,7 @@ def after_tax(income, band='scotland'):
         if band == 'scotland':
             band_obj = _scottish_tax_bands
         elif band == 'england':
-            band_obj = _scottish_tax_bands
+            band_obj = _scottish_tax_bands  # lol why bother?
         else:
             raise Exception(f'Unrecognised band id {band}.')
 

@@ -1,13 +1,13 @@
 from matplotlib import pyplot as plt
 
+
 class Plotter:
 
-    def __init__(self, name):
+    def __init__(self, name=None):
         self.name = name
         self.diagrams = list()
 
     def __enter__(self):
-        plt.rcParams['savefig.bbox'] = 'tight'
         return self
 
     def __exit__(self, *args):
@@ -20,7 +20,11 @@ class Plotter:
         for ax, diagram in zip(axes, self.diagrams):
             plt.sca(ax)
             diagram.plot()
-        plt.savefig(self.name)
+        plt.tight_layout()
+        if self.name is not None:
+            plt.savefig(self.name)
+        else:
+            plt.show()
 
     def add(self, dia):
         self.diagrams.append(dia)

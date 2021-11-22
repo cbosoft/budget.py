@@ -13,7 +13,7 @@ class Diagram:
         today = datetime.today()
 
         if not start or isinstance(start, int):
-            n_months = -1
+            n_months = 0
             if isinstance(start, int):
                 assert start < 0
                 n_months = start
