@@ -1,5 +1,13 @@
+# python stuff
 *.pyc
 __pycache__
-tags
-mine
 .env
+
+# editor stuff
+.idea
+tags
+*un~
+
+# outputs etc
+mine
+*.pdf
