@@ -13,13 +13,14 @@ from .account import Account
 
 class BalanceSheet:
 
-    def __init__(self, name, *accounts: Account, single=False):
+    def __init__(self, name, *accounts: Account, single=False, currency='£'):
         self.name = name
         self.single = single
         self.accounts = list(accounts)
         self.scenarios: Dict[str, Scenario] = {}
         self.start = date.today()
         self.end = date.today()+timedelta(days=365//2)
+        self.currency = currency
 
     def __enter__(self):
         return self
@@ -69,7 +70,7 @@ class BalanceSheet:
             monthly_change = np.diff(data['monthly_data']['Current'])
             median_change = np.median(monthly_change)
             pm = '+' if median_change > 0 else '-'
-            change_str = f'{pm}£{median_change:.2f}'
+            change_str = f'Median monthly change {pm}{self.currency}{median_change:.2f}'
             if self.single:
                 plt.title(change_str)
             else:
@@ -81,13 +82,13 @@ class BalanceSheet:
         # locs, _ = plt.yticks()
         # plt.yticks(locs, [f'{int(l//1000)}k' for l in locs])
         # plt.sca(ax)
-        print(f'Total £{totals[-1]:.2f}')
+        print(f'Total {self.currency}{totals[-1]:.2f}')
         month_ticks = data['month_ind']
         plt.xticks(*zip(*month_ticks))
         locs, _ = plt.yticks()
         plt.yticks(locs, [f'{int(l//1000)}k' for l in locs])
         plt.axhline(0, color='0.8')
-        plt.ylabel('£')
+        plt.ylabel(f'Balance [{self.currency}]')
         plt.legend(loc='upper left')
         plt.tight_layout()
         plt.show()
