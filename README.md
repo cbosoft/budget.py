@@ -3,4 +3,4 @@ A very simple costs management and plotting tool.  I wrote this as I was approac
 
 # Example
 A demo of the library is shown [here](demo.py), results below:
-![demo.pdf](https://raw.githubusercontent.com/cbosoft/budget/master/demo.pdf)
+![demo.pdf](https://raw.githubusercontent.com/cbosoft/budget.py/master/demo.png)
