@@ -91,4 +91,7 @@ class BalanceSheet:
         plt.ylabel(f'Balance [{self.currency}]')
         plt.legend(loc='upper left')
         plt.tight_layout()
-        plt.show()
+        if self.name:
+            plt.savefig(self.name)
+        else:
+            plt.show()
