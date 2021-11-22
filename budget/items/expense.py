@@ -6,7 +6,7 @@ from ..account import Account
 
 class Expense(Item):
 
-    def __init__(self, *, amount: float, account: Union[str, int], when: When, **kwargs):
+    def __init__(self, *, amount: float, account: Union[str, int] = 0, when: When, **kwargs):
         super().__init__(when=when, **kwargs)
         self.amount = amount
         self.account = account

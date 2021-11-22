@@ -6,7 +6,7 @@ from ..account import Account
 
 class Transfer(Item):
 
-    def __init__(self, *, amount: float, from_account: Union[str, int, Account], to_account: Union[str, int, Account],
+    def __init__(self, *, amount: float, from_account: Union[str, int, Account] = 0, to_account: Union[str, int, Account],
                  when: When, **kwargs):
         super().__init__(when=when, **kwargs)
         self.amount = amount
