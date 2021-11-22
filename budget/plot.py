@@ -12,7 +12,7 @@ class Plotter:
 
     def __exit__(self, *args):
         l = len(self.diagrams)
-        fig, axes = plt.subplots(nrows=l, figsize=(8,4))
+        fig, axes = plt.subplots(nrows=l, figsize=(8, 4))
 
         if l == 1:
             axes = [axes]

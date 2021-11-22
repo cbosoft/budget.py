@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+
 class Diagram:
 
     def __init__(self):

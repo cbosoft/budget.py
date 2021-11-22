@@ -1,9 +1,19 @@
+from typing import Dict, List
+
+from .account import Account
+
+
 class Scenario:
 
-    def __init__(self, items=None):
-        if not items:
-            items = list()
-        self.items = items
+    def __init__(self, *accounts: Account, name=None):
+        self.accounts = accounts
+        self.accounts_by_name: Dict[str, Account] = {account.name: account for account in self.accounts}
+        self.name = name
+        self.items: List["Item"] = []
+
+    def add_item(self, item):
+        self.items.append(item)
+
 
 def _next_level_combo(last, scenarios):
     rv = list()
